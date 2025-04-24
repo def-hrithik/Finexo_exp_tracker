@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+    <title>Finexo</title>
     <link rel="stylesheet" href="styles-exp.css">
     <!-- Add Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,14 +12,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
         body {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: linear-gradient(to right, #060486, #08378a);
             color: white;
         }
     </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Expense Tracker</h2>
+        <h2 class="text-center mb-4">Finexo</h2>
 
         <div class="form-group">
             <label for="currency">Select Currency:</label>
@@ -48,10 +48,6 @@
                 <option value="Transport">Transport</option>
                 <option value="Shopping">Shopping</option>
                 <option value="Entertainment">Entertainment</option>
-                <option value="Other">Emi</option>
-                <option value="Other">Education</option>
-                <option value="Other">Grocerys</option>
-                <option value="Other">bills</option>
                 <option value="Other">Other</option>
             </select>
             <button onclick="addExpense()" class="btn btn-primary">Add Expense</button>
@@ -89,7 +85,7 @@
         <!-- Charts Section -->
         <div class="charts-container mt-4">
             <div class="chart-wrapper">
-                <h3>Category Distribution</h3>
+                <h3>Category Allocation</h3>
                 <canvas id="categoryChart"></canvas>
             </div>
             <div class="chart-wrapper">
@@ -246,7 +242,7 @@
                 datasets: [{
                     label: 'Category Distribution',
                     data: [10, 20, 30, 15, 25], // Example data
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#32CD32'],
                 }]
             },
             options: {
@@ -345,6 +341,10 @@
 
             dailyChart.data.datasets[0].data = dailySpending;
             dailyChart.update();
+        }
+
+        function toggleAIBot() {
+            window.open('index_bot.html', '_blank');
         }
     </script>
 </body>

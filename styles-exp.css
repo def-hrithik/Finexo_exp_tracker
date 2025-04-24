@@ -167,11 +167,12 @@ h3 {
     justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #141414;
-    background-color: #e9e5e5;
+    background-color: #c5bdbdee;
     margin-bottom: 5px;
     border-radius: 5px;
     flex-wrap: wrap;
     gap: 10px;
+    text-decoration-color: #141414;
 }
 
 #expense-list li button {
