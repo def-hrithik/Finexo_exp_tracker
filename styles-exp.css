@@ -1,0 +1,288 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px; /* Increased width to accommodate charts */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+h2 {
+    text-align: center;
+    color: #444;
+}
+
+h3 {
+    color: #444;
+}
+
+/* Logout Button */
+.logout-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right;
+    /* Add animation delay */
+    animation-delay: 0.5s;
+}
+
+.logout-btn:hover {
+    background-color: #ff1a1a;
+}
+
+/* Currency Selector */
+.currency-selector {
+    margin: 20px 0;
+}
+
+.currency-selector label {
+    font-weight: bold;
+}
+
+.currency-selector select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Finance Info */
+.finance-info {
+    margin: 20px 0;
+}
+
+.finance-info label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.finance-info input {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+/* Expense Form */
+.expense-form {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+.expense-form input,
+.expense-form select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #201e1e;
+    flex: 1;
+    min-width: 120px;
+}
+
+.expense-form button {
+    background-color: #4CAF50;
+    color: rgb(12, 11, 11);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    /* Add animation delay */
+    animation-delay: 0.5s;
+}
+
+.expense-form button:hover {
+    background-color: #45a049;
+}
+
+/* Export Options */
+.export-options {
+    margin: 20px 0;
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+.export-options button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    /* Add animation delay */
+    animation-delay: 0.5s;
+}
+
+.export-options button:hover {
+    background-color: #1976D2;
+}
+
+/* Expense Filter */
+.expense-filter {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+.expense-filter label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.expense-filter select,
+.expense-filter input[type="date"] {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Expense List */
+#expense-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#expense-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #141414;
+    background-color: #e9e5e5;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#expense-list li button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#expense-list li button:hover {
+    background-color: #ff1a1a;
+}
+
+/* Financial Summary */
+.financial-summary {
+    margin: 20px 0;
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+.financial-summary h3 {
+    margin: 10px 0;
+}
+
+/* Charts Container */
+.charts-container {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    /* Add animation duration */
+    animation-duration: 1s;
+}
+
+.chart-wrapper {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-wrapper h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+canvas {
+    max-height: 300px;
+}
+
+/* Reset Button */
+.reset-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    /* Add animation delay */
+    animation-delay: 0.5s;
+}
+
+.reset-btn:hover {
+    background-color: #ff1a1a;
+}
+
+/* Add hover effects */
+button:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+/* Add focus effects */
+input:focus, select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .expense-form {
+        flex-direction: column;
+    }
+
+    .charts-container {
+        flex-direction: column;
+    }
+
+    .chart-wrapper {
+        min-width: 100%;
+    }
+
+    .logout-btn {
+        float: none;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+/* css element of ai bot*/
+

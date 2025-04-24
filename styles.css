@@ -1,0 +1,76 @@
+/*body {
+    font-family: Arial, sans-serif;
+    background: #7c66ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}*/
+body {
+    font-family: Arial, sans-serif;
+    background: url('pexels-anniroenkae-2832382.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/*input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+*/
+input {
+    width: 90%;  /* Adjust width to fit within the container */
+    max-width: 350px; /* Ensure it doesn't go beyond a certain width */
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #7c66ff;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5a49cc;
+}
+
+p {
+    margin-top: 15px;
+}
+
+a {
+    color: #7c66ff;
+    text-decoration: none;
+    font-weight: bold;
+}

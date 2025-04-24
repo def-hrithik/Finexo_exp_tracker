@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="styles-exp.css">
+    <!-- Add Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add Bootstrap CSS CDN for styling and animations -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Expense Tracker</h2>
+
+        <div class="form-group">
+            <label for="currency">Select Currency:</label>
+            <select id="currency" class="form-control" onchange="updateCurrency()">
+                <option value="INR" selected>INR (₹)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Income:</label>
+            <input type="number" id="income" class="form-control" placeholder="Enter your income" oninput="updateFinance()">
+            <label>Budget:</label>
+            <input type="number" id="budget" class="form-control" placeholder="Set your budget" oninput="updateFinance()">
+        </div>
+
+        <div class="expense-form">
+            <input type="text" id="expense-name" class="form-control mb-2" placeholder="Expense Name" required>
+            <input type="number" id="expense-amount" class="form-control mb-2" placeholder="Amount" required>
+            <input type="date" id="expense-date" class="form-control mb-2">
+            <input type="text" id="expense-description" class="form-control mb-2" placeholder="Description (Optional)">
+            <select id="expense-category" class="form-control mb-2">
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Emi</option>
+                <option value="Other">Education</option>
+                <option value="Other">Grocerys</option>
+                <option value="Other">bills</option>
+                <option value="Other">Other</option>
+            </select>
+            <button onclick="addExpense()" class="btn btn-primary">Add Expense</button>
+        </div>
+
+        <!-- New Features -->
+        <div class="export-options mt-4">
+            <button onclick="exportToCSV()" class="btn btn-secondary">Export to CSV</button>
+            <button onclick="exportToPDF()" class="btn btn-secondary">Export to PDF</button>
+        </div>
+
+        <div class="expense-filter mt-4">
+            <label for="filter-category">Filter by Category:</label>
+            <select id="filter-category" class="form-control mb-2" onchange="filterExpenses()">
+                <option value="All">All</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+            </select>
+            <label for="date-range">Date Range:</label>
+            <input type="date" id="date-start" class="form-control mb-2" onchange="filterExpenses()">
+            <input type="date" id="date-end" class="form-control mb-2" onchange="filterExpenses()">
+        </div>
+
+        <ul id="expense-list" class="list-group"></ul>
+
+        <div class="financial-summary mt-4">
+            <h3>Total Expenses: <span id="currency-symbol">₹</span><span id="total-amount">0</span></h3>
+            <h3>Balance: <span id="currency-symbol">₹</span><span id="balance">0</span></h3>
+            <h3>Highest Spending in a Day: <span id="currency-symbol">₹</span><span id="highest-spending">0</span></h3>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container mt-4">
+            <div class="chart-wrapper">
+                <h3>Category Distribution</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3>Daily Spending Trend</h3>
+                <canvas id="dailyChart"></canvas>
+            </div>
+        </div>
+
+        <button onclick="resetExpenses()" class="btn btn-warning mt-4">Reset Expenses</button>
+        <button id="toggle-ai-bot" class="btn btn-info mt-4" onclick="toggleAIBot()">Finexo Expert</button>
+    </div>
+    <div id="ai-bot" style="display:none; width: 100%; height: 300px; background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 20px;">
+        AI Bot Content Here
+    </div>
+
+    <script src="js/script-exp.js"></script>
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let expenses = [];
+
+        function updateCurrency() {
+            const currency = document.getElementById('currency').value;
+            const currencySymbol = {
+                'INR': '₹',
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£'
+            }[currency];
+            document.querySelectorAll('#currency-symbol').forEach(el => el.innerText = currencySymbol);
+            updateFinance();
+        }
+
+        function updateFinance() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            const budget = parseFloat(document.getElementById('budget').value) || 0;
+            const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const balance = income - totalExpenses;
+            document.getElementById('total-amount').innerText = totalExpenses.toFixed(2);
+            document.getElementById('balance').innerText = balance.toFixed(2);
+            document.getElementById('highest-spending').innerText = Math.max(...expenses.map(e => e.amount), 0).toFixed(2);
+        }
+
+        function addExpense() {
+            const name = document.getElementById('expense-name').value;
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const date = document.getElementById('expense-date').value;
+            const description = document.getElementById('expense-description').value;
+            const category = document.getElementById('expense-category').value;
+
+            if (!name || isNaN(amount) || !date) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const expense = { name, amount, date, description, category };
+            expenses.push(expense);
+            displayExpenses();
+            updateFinance();
+            clearExpenseForm();
+            updateDailyChart();
+        }
+
+        function clearExpenseForm() {
+            document.getElementById('expense-name').value = '';
+            document.getElementById('expense-amount').value = '';
+            document.getElementById('expense-date').value = '';
+            document.getElementById('expense-description').value = '';
+            document.getElementById('expense-category').value = 'Food';
+        }
+
+        function displayExpenses(filteredExpenses = expenses) {
+            const expenseList = document.getElementById('expense-list');
+            expenseList.innerHTML = '';
+            filteredExpenses.forEach(expense => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerText = `${expense.name} - ${expense.amount} - ${expense.date} - ${expense.description} - ${expense.category}`;
+                expenseList.appendChild(li);
+            });
+        }
+
+        function filterExpenses() {
+            const category = document.getElementById('filter-category').value;
+            const dateStart = document.getElementById('date-start').value;
+            const dateEnd = document.getElementById('date-end').value;
+
+            let filteredExpenses = expenses;
+            if (category !== 'All') {
+                filteredExpenses = filteredExpenses.filter(expense => expense.category === category);
+            }
+            if (dateStart) {
+                filteredExpenses = filteredExpenses.filter(expense => new Date(expense.date) >= new Date(dateStart));
+            }
+            if (dateEnd) {
+                filteredExpenses = filteredExpenses.filter(expense => new Date(expense.date) <= new Date(dateEnd));
+            }
+
+            displayExpenses(filteredExpenses);
+        }
+
+        function resetExpenses() {
+            if (confirm('Are you sure you want to reset all expenses?')) {
+                expenses = [];
+                displayExpenses();
+                updateFinance();
+                updateDailyChart();
+            }
+        }
+
+        async function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            let expenses = document.getElementById('expense-list').children;
+            let content = "Expense Tracker Report\n\n";
+            for (let expense of expenses) {
+                content += expense.innerText + "\n";
+            }
+
+            doc.text(content, 10, 10);
+            doc.save('expense_report.pdf');
+        }
+
+        async function exportToCSV() {
+            let expenses = document.getElementById('expense-list').children;
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Expense Name,Amount,Date,Description,Category\n";
+
+            for (let expense of expenses) {
+                let expenseDetails = expense.innerText.split('\n');
+                csvContent += expenseDetails.join(",") + "\n";
+            }
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "expense_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Chart.js configuration
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Food', 'Transport', 'Shopping', 'Entertainment', 'Other'],
+                datasets: [{
+                    label: 'Category Distribution',
+                    data: [10, 20, 30, 15, 25], // Example data
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+
+        const dailyChart = new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    label: 'Daily Spending Trend',
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day of the Week'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spending Amount'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Daily Spending Trend',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    zoom: {
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy',
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest',
+                    axis: 'x'
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeOutElastic'
+                },
+                elements: {
+                    line: {
+                        tension: 0.4
+                    },
+                    point: {
+                        radius: 5,
+                        hoverRadius: 7,
+                        backgroundColor: 'rgba(75, 192, 192, 1)'
+                    }
+                }
+            }
+        });
+
+        function updateDailyChart() {
+            const dailySpending = [0, 0, 0, 0, 0, 0, 0];
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            expenses.forEach(expense => {
+                const date = new Date(expense.date);
+                const dayIndex = date.getDay();
+                dailySpending[dayIndex] += expense.amount;
+            });
+
+            dailyChart.data.datasets[0].data = dailySpending;
+            dailyChart.update();
+        }
+    </script>
+</body>
+</html>
